@@ -1,18 +1,31 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div>
+    <AddUser @user-added="fetchUsers" />
+    <UserList :users="users" @delete-user="removeUserFromList" />
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+import AddUser from '../components/AddUser.vue';
+import UserList from '../components/UserList.vue';
+import { mapState, mapActions } from 'vuex';
 
 export default {
-  name: 'HomeView',
   components: {
-    HelloWorld
+    AddUser,
+    UserList
+  },
+  computed: {
+    ...mapState(['users'])
+  },
+  methods: {
+    ...mapActions(['fetchUsers']),
+    removeUserFromList(index) {
+      this.$store.commit('removeUser', index); 
+    }
+  },
+  async mounted() {
+    await this.fetchUsers();
   }
 }
 </script>

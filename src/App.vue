@@ -1,30 +1,33 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
-  <router-view/>
+  <div>
+    <AddUser @user-added="fetchUsers" />
+    <UserList :users="users" @delete-user="removeUserFromList" />
+  </div>
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+import AddUser from '../components/AddUser.vue';
+import UserList from '../components/UserList.vue';
+import { mapState, mapActions } from 'vuex';
 
-nav {
-  padding: 30px;
+export default {
+  components: {
+    AddUser,
+    UserList
+  },
+  computed: {
+    ...mapState(['users'])
+  },
+  methods: {
+    ...mapActions(['fetchUsers']),
+    removeUserFromList(index) {
+      this.$store.commit('removeUser', index);
+    }
+  },
+  async mounted() {
+    await this.fetchUsers();
+  }
 }
+</script>
 
-nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-nav a.router-link-exact-active {
-  color: #42b983;
-}
-</style>
+<!--Por terminar ya que no me trae por un error los usuarios-->
